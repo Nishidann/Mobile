@@ -28,6 +28,19 @@ aula mobile 2/
 
 ---
 
+## ⬇️ Clonar o Repositório
+
+```bash
+# Clonar o projeto do GitHub
+git clone <url-do-repositorio>
+cd "aula mobile 2"
+```
+
+> **Dica:** Substitua `<url-do-repositorio>` pela URL do seu repositório GitHub.
+> Você verá algo como: `git clone https://github.com/seu-usuario/aula-mobile-2.git`
+
+---
+
 ## 🚀 Como Executar
 
 ### Pré-requisitos
@@ -35,6 +48,7 @@ aula mobile 2/
 - **Docker** e **Docker Compose**
 - **Node.js** v14+ (na máquina host)
 - **Flutter SDK** (será instalado se necessário)
+- **Git** (para clonar o repositório)
 
 ---
 
