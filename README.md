@@ -36,7 +36,7 @@ git clone <url-do-repositorio>
 cd "aula mobile 2"
 ```
 
-> **Dica:** Substitua `<url-do-repositorio>` pela URL do seu repositório GitHub.
+> **Dica:** Substitua `https://github.com/Nishidann/Mobile.git` pela URL do seu repositório GitHub.
 > Você verá algo como: `git clone https://github.com/seu-usuario/aula-mobile-2.git`
 
 ---
