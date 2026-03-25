@@ -11,5 +11,9 @@ CREATE TABLE IF NOT EXISTS usuarios (
 -- Criar índice para busca mais rápida
 CREATE INDEX IF NOT EXISTS idx_email ON usuarios(email);
 
--- NOTA: Usuários podem ser criados através da interface de registro em /register
--- ou via POST /usuarios na API
+-- Inserir usuários de teste
+INSERT INTO usuarios (nome, email, senha) VALUES
+  ('João Silva', 'joao@email.com', 'senha123'),
+  ('Maria Santos', 'maria@email.com', 'senha456'),
+  ('Pedro Oliveira', 'pedro@email.com', 'senha789')
+ON CONFLICT (email) DO NOTHING;

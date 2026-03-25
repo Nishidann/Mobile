@@ -14,8 +14,9 @@ aula mobile 2/
 │   │   │   └── swagger.js   # Documentação API
 │   │   └── routes/
 │   │       └── auth.js      # Rotas de usuários
+│   ├── docker-compose.yml   # Container PostgreSQL
 │   ├── .env                 # Variáveis de ambiente
-│   ├── setup.sql            # Script do banco
+│   ├── setup.sql            # Script do banco + dados iniciais
 │   └── package.json
 │
 └── front_usuarios/          # App Flutter Web
@@ -31,32 +32,36 @@ aula mobile 2/
 
 ### Pré-requisitos
 
-- **Node.js** v14+
-- **PostgreSQL** instalado e rodando
+- **Docker** e **Docker Compose**
+- **Node.js** v14+ (na máquina host)
 - **Flutter SDK** (será instalado se necessário)
 
 ---
 
-### 1️⃣ Configurar o Banco de Dados
+### 1️⃣ Iniciar o Banco de Dados com Docker
 
 ```bash
-# Criar banco e tabelas
 cd backend
-psql -U postgres -f setup.sql
+docker compose up -d
 ```
+
+✅ PostgreSQL rodando em container (porta 5433)  
+📚 Dados persistidos em volume Docker
 
 ### 2️⃣ Configurar Variáveis de Ambiente
 
-Edite o arquivo `backend/.env`:
+O arquivo `backend/.env` já está configurado para Docker:
 
 ```env
 DB_USER=postgres
 DB_PASSWORD=sua_senha_aqui
 DB_HOST=localhost
-DB_PORT=5432
+DB_PORT=5433
 DB_NAME=usuarios_db
 PORT=3000
 ```
+
+> **Nota:** A porta 5433 é mapeada do container (5432 interno) para sua máquina
 
 ### 3️⃣ Iniciar o Backend
 
@@ -65,6 +70,8 @@ cd backend
 npm install          # Instalar dependências (primeira vez)
 npm run dev          # Iniciar com auto-reload
 ```
+
+ > **Certifique-se que o Docker está rodando:** `docker ps` deve mostrar o container `usuarios_db`
 
 ✅ Backend rodando em: `http://localhost:3000`  
 📚 Swagger/Docs em: `http://localhost:3000/api-docs`
@@ -147,13 +154,29 @@ PORT=3001 npm run dev
 flutter run -d chrome --web-port=9000
 ```
 
+### Docker não inicia
+```bash
+# Verificar se Docker está rodando:
+docker ps
+
+# Ver logs do container:
+docker compose logs -f postgres
+
+# Parar e remover containers:
+docker compose down
+
+# Iniciar novamente:
+docker compose up -d
+```
+
 ---
 
 ## 🛠️ Tecnologias
 
 **Backend:**
 - Node.js + Express
-- PostgreSQL
+- PostgreSQL (em Docker)
+- Docker & Docker Compose
 - Swagger (documentação)
 - CORS
 
@@ -161,3 +184,22 @@ flutter run -d chrome --web-port=9000
 - Flutter Web
 - Pacote HTTP
 - Material Design 3
+
+---
+
+## 🐳 Gerenciar Docker
+
+```bash
+# Parar o banco de dados:
+cd backend && docker compose stop
+
+# Pausar e retomar:
+docker compose pause
+docker compose unpause
+
+# Ver status dos containers:
+docker compose ps
+
+# Remover containers (dados persistem no volume):
+docker compose down
+```
