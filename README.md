@@ -47,8 +47,53 @@ cd "aula mobile 2"
 
 - **Docker** e **Docker Compose**
 - **Node.js** v14+ (na máquina host)
-- **Flutter SDK** (será instalado se necessário)
+- **Flutter SDK** (v3.0+)
 - **Git** (para clonar o repositório)
+
+---
+
+### 📦 Instalar Flutter
+
+#### Verificar se Flutter já está instalado:
+```bash
+flutter --version
+```
+
+Se não estiver instalado, siga os passos abaixo:
+
+#### 1. Download + Instalação
+
+**Linux/Mac:**
+```bash
+# 1. Faça download do SDK
+git clone https://github.com/flutter/flutter.git -b stable
+cd flutter
+export PATH="$PATH:$(pwd)/bin"
+
+# 2. Adicione ao PATH permanentemente (adicione ao ~/.bashrc ou ~/.zshrc):
+echo 'export PATH="$PATH:[caminho-flutter]/bin"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+**Windows:**
+- Download: https://storage.googleapis.com/flutter_infra_release/releases/stable/windows/flutter_windows_3.19.X.zip
+- Extraia em `C:\src\flutter`
+- Adicione `C:\src\flutter\bin` ao PATH do Windows
+
+#### 2. Verificar instalação:
+```bash
+flutter doctor
+```
+
+Isso mostrará se há dependências faltando. Siga as instruções para resolver qualquer problema.
+
+#### 3. Habilitar Flutter Web:
+```bash
+flutter config --enable-web
+flutter doctor
+```
+
+**Referência oficial:** https://flutter.dev/docs/get-started/install
 
 ---
 
