@@ -1,16 +1,56 @@
-# front_usuarios
+# Frontend Flutter Web - Sistema de Usuários
 
-A new Flutter project.
+Aplicativo Flutter Web para cadastro e listagem de usuários integrado com backend Node.js.
 
-## Getting Started
+## 🛠️ Tecnologias
 
-This project is a starting point for a Flutter application.
+- **Flutter** - Framework multiplataforma
+- **Dart** - Linguagem de programação
+- **HTTP** - Pacote para requisições à API
+- **Material Design 3** - Design system
 
-A few resources to get you started if this is your first Flutter project:
+## 📋 Pré-requisitos
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- Flutter SDK v3.0+
+- Chrome ou outro navegador moderno
+- Backend Node.js rodando em `http://localhost:3000`
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 🚀 Como Executar
+
+### 1. Instalar Dependências
+
+```bash
+flutter pub get
+```
+
+### 2. Executar no Navegador
+
+```bash
+# Em chrome (padrão)
+flutter run -d chrome
+
+# Em outra porta
+flutter run -d chrome --web-port=9000
+```
+
+### 3. Modo Desenvolvimento com Hot Reload
+
+Flutter Web suporta hot reload por padrão. Salve o arquivo e veja as mudanças imediatamente!
+
+## 📱 Telas Disponíveis
+
+1. **main.dart** - Menu principal com navegação
+2. **tela_cadastro.dart** - Cadastro de novos usuários
+3. **tela_listagem.dart** - Listagem de todos os usuários
+
+## 🔗 API Endpoints
+
+- `GET /usuarios` - Listar usuários
+- `POST /usuarios` - Criar novo usuário
+- `POST /login` - Autenticar usuário
+
+## 📚 Recursos
+
+- [Documentação Flutter](https://flutter.dev/docs)
+- [Pacote HTTP](https://pub.dev/packages/http)
+- [Material Design 3](https://m3.material.io/)

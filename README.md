@@ -19,7 +19,7 @@ aula mobile 2/
 │   ├── setup.sql            # Script do banco + dados iniciais
 │   └── package.json
 │
-└── front_usuarios/          # App Flutter Web
+└── frontend/                # App Flutter Web
     └── lib/
         ├── main.dart            # Tela principal (menu)
         ├── tela_cadastro.dart   # Cadastro de usuários
@@ -55,6 +55,7 @@ cd "aula mobile 2"
 ### 📦 Instalar Flutter
 
 #### Verificar se Flutter já está instalado:
+
 ```bash
 flutter --version
 ```
@@ -64,6 +65,7 @@ Se não estiver instalado, siga os passos abaixo:
 #### 1. Download + Instalação
 
 **Linux/Mac:**
+
 ```bash
 # 1. Faça download do SDK
 git clone https://github.com/flutter/flutter.git -b stable
@@ -76,11 +78,13 @@ source ~/.bashrc
 ```
 
 **Windows:**
+
 - Download: https://storage.googleapis.com/flutter_infra_release/releases/stable/windows/flutter_windows_3.19.X.zip
 - Extraia em `C:\src\flutter`
 - Adicione `C:\src\flutter\bin` ao PATH do Windows
 
 #### 2. Verificar instalação:
+
 ```bash
 flutter doctor
 ```
@@ -88,6 +92,7 @@ flutter doctor
 Isso mostrará se há dependências faltando. Siga as instruções para resolver qualquer problema.
 
 #### 3. Habilitar Flutter Web:
+
 ```bash
 flutter config --enable-web
 flutter doctor
@@ -130,7 +135,7 @@ npm install          # Instalar dependências (primeira vez)
 npm run dev          # Iniciar com auto-reload
 ```
 
- > **Certifique-se que o Docker está rodando:** `docker ps` deve mostrar o container `usuarios_db`
+> **Certifique-se que o Docker está rodando:** `docker ps` deve mostrar o container `usuarios_db`
 
 ✅ Backend rodando em: `http://localhost:3000`  
 📚 Swagger/Docs em: `http://localhost:3000/api-docs`
@@ -140,7 +145,7 @@ npm run dev          # Iniciar com auto-reload
 Abra um **novo terminal**:
 
 ```bash
-cd front_usuarios
+cd frontend
 flutter pub get      # Instalar dependências (primeira vez)
 flutter run -d chrome
 ```
@@ -151,11 +156,11 @@ flutter run -d chrome
 
 ## 📡 Endpoints da API
 
-| Método | Rota        | Descrição              |
-|--------|-------------|------------------------|
-| GET    | /usuarios   | Listar todos usuários  |
-| POST   | /usuarios   | Criar novo usuário     |
-| POST   | /login      | Autenticar usuário     |
+| Método | Rota      | Descrição             |
+| ------ | --------- | --------------------- |
+| GET    | /usuarios | Listar todos usuários |
+| POST   | /usuarios | Criar novo usuário    |
+| POST   | /login    | Autenticar usuário    |
 
 ### Exemplo de Cadastro (POST /usuarios)
 
@@ -180,31 +185,35 @@ flutter run -d chrome
 
 ## 👥 Usuários de Teste
 
-| Email             | Senha     |
-|-------------------|-----------|
-| joao@email.com    | senha123  |
-| maria@email.com   | senha456  |
-| pedro@email.com   | senha789  |
+| Email           | Senha    |
+| --------------- | -------- |
+| joao@email.com  | senha123 |
+| maria@email.com | senha456 |
+| pedro@email.com | senha789 |
 
 ---
 
 ## ⚠️ Solução de Problemas
 
 ### Erro de CORS
+
 O backend já está configurado com CORS habilitado. Se houver problemas:
+
 ```javascript
 // Em backend/src/server.js está configurado:
-const cors = require('cors');
+const cors = require("cors");
 app.use(cors());
 ```
 
 ### Flutter não encontrado
+
 ```bash
 # Se flutter não estiver no PATH, use o caminho completo:
 ~/flutter/bin/flutter run -d chrome
 ```
 
 ### Porta em uso
+
 ```bash
 # Backend em outra porta:
 PORT=3001 npm run dev
@@ -214,6 +223,7 @@ flutter run -d chrome --web-port=9000
 ```
 
 ### Docker não inicia
+
 ```bash
 # Verificar se Docker está rodando:
 docker ps
@@ -233,6 +243,7 @@ docker compose up -d
 ## 🛠️ Tecnologias
 
 **Backend:**
+
 - Node.js + Express
 - PostgreSQL (em Docker)
 - Docker & Docker Compose
@@ -240,6 +251,7 @@ docker compose up -d
 - CORS
 
 **Frontend:**
+
 - Flutter Web
 - Pacote HTTP
 - Material Design 3
