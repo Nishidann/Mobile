@@ -41,6 +41,144 @@ class _TelaListagemState extends State<TelaListagem> {
     });
   }
 
+  Future<void> _deletarUsuario(int id, String nome) async {
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirmar exclusão'),
+        content: Text('Tem certeza que deseja deletar o usuário "$nome"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Deletar', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true) {
+      try {
+        final response = await http.delete(
+          Uri.parse('http://localhost:3000/usuarios/$id'),
+        );
+
+        if (response.statusCode == 200) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Usuário deletado com sucesso!'),
+                backgroundColor: Colors.green,
+              ),
+            );
+            _recarregar();
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Erro ao deletar usuário'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  Future<void> _editarUsuario(int id, String nomeAtual, String emailAtual) async {
+    final nomeController = TextEditingController(text: nomeAtual);
+    final emailController = TextEditingController(text: emailAtual);
+
+    final resultado = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Editar usuário'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: nomeController,
+              decoration: const InputDecoration(
+                labelText: 'Nome',
+                border: OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 16),
+            TextField(
+              controller: emailController,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(),
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancelar'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Salvar'),
+          ),
+        ],
+      ),
+    );
+
+    if (resultado == true) {
+      try {
+        final response = await http.patch(
+          Uri.parse('http://localhost:3000/usuarios/$id'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'nome': nomeController.text,
+            'email': emailController.text,
+          }),
+        );
+
+        if (response.statusCode == 200) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Usuário atualizado com sucesso!'),
+                backgroundColor: Colors.green,
+              ),
+            );
+            _recarregar();
+          }
+        } else {
+          if (mounted) {
+            final data = jsonDecode(response.body);
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(data['message'] ?? 'Erro ao atualizar'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Erro ao atualizar usuário'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+
+    nomeController.dispose();
+    emailController.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -163,9 +301,46 @@ class _TelaListagemState extends State<TelaListagem> {
                     usuario['email'] ?? 'Sem e-mail',
                     style: const TextStyle(color: Colors.grey),
                   ),
-                  trailing: Text(
-                    '#${usuario['id']}',
-                    style: const TextStyle(color: Colors.grey),
+                  trailing: PopupMenuButton(
+                    itemBuilder: (context) => [
+                      PopupMenuItem(
+                        child: const Row(
+                          children: [
+                            Icon(Icons.edit, color: Colors.blue),
+                            SizedBox(width: 8),
+                            Text('Editar'),
+                          ],
+                        ),
+                        onTap: () {
+                          Future.delayed(
+                            const Duration(milliseconds: 100),
+                            () => _editarUsuario(
+                              usuario['id'],
+                              usuario['nome'],
+                              usuario['email'],
+                            ),
+                          );
+                        },
+                      ),
+                      PopupMenuItem(
+                        child: const Row(
+                          children: [
+                            Icon(Icons.delete, color: Colors.red),
+                            SizedBox(width: 8),
+                            Text('Deletar'),
+                          ],
+                        ),
+                        onTap: () {
+                          Future.delayed(
+                            const Duration(milliseconds: 100),
+                            () => _deletarUsuario(
+                              usuario['id'],
+                              usuario['nome'],
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
               );

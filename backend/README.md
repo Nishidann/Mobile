@@ -26,30 +26,26 @@ npm install
 
 ### 2. Configurar Banco de Dados
 
-#### Opção 1: Usando psql (Recomendado)
+Execute os comandos abaixo para criar o banco de dados e as tabelas:
 
 ```bash
-# Conectar ao PostgreSQL
-psql -U postgres
+# Criar o banco de dados
+sudo -u postgres psql -c "CREATE DATABASE usuarios_db;"
 
-# Executar o arquivo setup.sql dentro do psql
-\i setup.sql
+# Popular com tabelas e dados de teste
+sudo -u postgres psql -d usuarios_db -f setup.sql
 ```
 
-#### Opção 2: Comando direto
-
-```bash
-psql -U postgres -f setup.sql
-```
+Se pedir a senha, digite a senha do seu usuário do sistema.
 
 ### 3. Configurar Variáveis de Ambiente
 
-Edite o arquivo `.env` com suas credenciais:
+Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
 
 ```env
 PORT=3000
 DB_USER=postgres
-DB_PASSWORD=sua_senha_aqui
+DB_PASSWORD=postgres
 DB_HOST=localhost
 DB_PORT=5432
 DB_NAME=usuarios_db
@@ -75,6 +71,7 @@ Acesse a documentação Swagger em: `http://localhost:3000/api-docs`
 ### Endpoints Disponíveis
 
 #### 1. Login
+
 ```http
 POST /login
 Content-Type: application/json
@@ -86,6 +83,7 @@ Content-Type: application/json
 ```
 
 **Resposta de sucesso (200):**
+
 ```json
 {
   "success": true,
@@ -99,11 +97,13 @@ Content-Type: application/json
 ```
 
 #### 2. Listar Usuários
+
 ```http
 GET /usuarios
 ```
 
 **Resposta (200):**
+
 ```json
 {
   "success": true,
@@ -123,6 +123,7 @@ GET /usuarios
 ```
 
 #### 3. Criar Novo Usuário
+
 ```http
 POST /usuarios
 Content-Type: application/json
@@ -135,6 +136,7 @@ Content-Type: application/json
 ```
 
 **Resposta de sucesso (201):**
+
 ```json
 {
   "success": true,
@@ -147,14 +149,66 @@ Content-Type: application/json
 }
 ```
 
+#### 4. Atualizar Usuário
+
+```http
+PATCH /usuarios/1
+Content-Type: application/json
+
+{
+  "nome": "João Silva Atualizado",
+  "email": "joao_novo@email.com",
+  "senha": "nova_senha123"
+}
+```
+
+**Resposta de sucesso (200):**
+
+```json
+{
+  "success": true,
+  "message": "Usuário atualizado com sucesso",
+  "usuario": {
+    "id": 1,
+    "nome": "João Silva Atualizado",
+    "email": "joao_novo@email.com"
+  }
+}
+```
+
+**Notas:**
+
+- Você pode atualizar apenas alguns campos (não precisa enviar todos)
+- O campo `updated_at` é atualizado automaticamente
+
+#### 5. Deletar Usuário
+
+```http
+DELETE /usuarios/1
+```
+
+**Resposta de sucesso (200):**
+
+```json
+{
+  "success": true,
+  "message": "Usuário deletado com sucesso",
+  "usuario": {
+    "id": 1,
+    "nome": "João Silva",
+    "email": "joao@email.com"
+  }
+}
+```
+
 ## 👤 Usuários de Teste
 
 O banco já vem com 3 usuários de teste:
 
-| Email | Senha | Nome |
-|-------|-------|------|
-| joao@email.com | senha123 | João Silva |
-| maria@email.com | senha456 | Maria Santos |
+| Email           | Senha    | Nome           |
+| --------------- | -------- | -------------- |
+| joao@email.com  | senha123 | João Silva     |
+| maria@email.com | senha456 | Maria Santos   |
 | pedro@email.com | senha789 | Pedro Oliveira |
 
 ## 🔧 Estrutura do Projeto
@@ -181,16 +235,30 @@ O banco já vem com 3 usuários de teste:
 
 ## 🐛 Solução de Problemas
 
-### Erro: "connect ECONNREFUSED"
-- Verifique se PostgreSQL está rodando
-- Confirme as credenciais em `.env`
-
 ### Erro: "database usuarios_db does not exist"
-- Execute o arquivo `setup.sql` para criar o banco
-- Conecte ao banco postgres antes de rodar o arquivo
 
-### Porta em uso
-- Mude o PORT em `.env` para uma porta disponível
+Execute os comandos para criar o banco:
+
+```bash
+sudo -u postgres psql -c "CREATE DATABASE usuarios_db;"
+sudo -u postgres psql -d usuarios_db -f setup.sql
+```
+
+### Erro: "password authentication failed"
+
+- Defina a senha do usuário postgres:
+
+```bash
+sudo -u postgres psql -c "ALTER USER postgres WITH PASSWORD 'postgres';"
+```
+
+- Confirme que o `.env` tem `DB_PASSWORD=postgres`
+
+### Erro: "connect ECONNREFUSED"
+
+- Verifique se PostgreSQL está rodando: `sudo systemctl status postgresql`
+- Confirme as credenciais em `.env`
+- Use `localhost` como DB_HOST
 
 ## 📧 Contato
 

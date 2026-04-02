@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'tela_inicial.dart';
+import 'tela_login.dart';
 import 'tela_cadastro.dart';
 import 'tela_listagem.dart';
 
@@ -18,13 +20,15 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
         useMaterial3: true,
       ),
-      home: const TelaPrincipal(),
+      home: const TelaInicial(),
     );
   }
 }
 
 class TelaPrincipal extends StatelessWidget {
-  const TelaPrincipal({super.key});
+  final dynamic usuarioLogado;
+
+  const TelaPrincipal({super.key, this.usuarioLogado});
 
   @override
   Widget build(BuildContext context) {
@@ -35,6 +39,28 @@ class TelaPrincipal extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.blue,
         foregroundColor: Colors.white,
+        actions: [
+          if (usuarioLogado != null)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Center(
+                child: Text(
+                  'Olá, ${usuarioLogado['nome']}',
+                  style: const TextStyle(fontSize: 14),
+                ),
+              ),
+            ),
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () {
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => const TelaLogin()),
+                (route) => false,
+              );
+            },
+            tooltip: 'Logout',
+          ),
+        ],
       ),
       body: Center(
         child: Column(

@@ -41,3 +41,16 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+
+# Generated files
+/linux/
+/windows/
+/macos/
+/build/
+.dart_tool/
+.metadata
+
+# IDE - IntelliJ
+*.iml
+*.ipr
+*.iws
