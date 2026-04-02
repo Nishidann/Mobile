@@ -13,17 +13,20 @@ aula mobile 2/
 │   │   │   ├── database.js  # Conexão PostgreSQL
 │   │   │   └── swagger.js   # Documentação API
 │   │   └── routes/
-│   │       └── auth.js      # Rotas de usuários
+│   │       └── auth.js      # Rotas de usuários e autenticação
 │   ├── docker-compose.yml   # Container PostgreSQL
 │   ├── .env                 # Variáveis de ambiente
 │   ├── setup.sql            # Script do banco + dados iniciais
 │   └── package.json
 │
-└── frontend/                # App Flutter Web
+└── frontend/                # App Flutter Desktop & Web
     └── lib/
-        ├── main.dart            # Tela principal (menu)
+        ├── main.dart            # Menu principal (após autenticação)
+        ├── tela_inicial.dart    # Tela de boas-vindas (Login ou Registrar)
+        ├── tela_login.dart      # Login do usuário
+        ├── tela_registro.dart   # Registro de novo usuário
         ├── tela_cadastro.dart   # Cadastro de usuários
-        └── tela_listagem.dart   # Listagem de usuários
+        └── tela_listagem.dart   # Listagem com edição e exclusão
 ```
 
 ---
@@ -45,10 +48,17 @@ cd "aula mobile 2"
 
 ### Pré-requisitos
 
-- **Docker** e **Docker Compose**
-- **Node.js** v14+ (na máquina host)
+- **Docker** e **Docker Compose** (para banco de dados)
+- **Node.js** v14+ (na máquina host para backend)
+- **PostgreSQL** (v12+ - pode usar Docker ou máquina local)
 - **Flutter SDK** (v3.0+)
 - **Git** (para clonar o repositório)
+
+**Sistemas Operacionais Suportados:**
+
+- Linux (Desktop)
+- Windows (pode precisar ajustes)
+- macOS (pode precisar ajustes)
 
 ---
 
@@ -91,10 +101,10 @@ flutter doctor
 
 Isso mostrará se há dependências faltando. Siga as instruções para resolver qualquer problema.
 
-#### 3. Habilitar Flutter Web:
+#### 3. Habilitar Flutter para Linux Desktop:
 
 ```bash
-flutter config --enable-web
+flutter config --enable-linux-desktop
 flutter doctor
 ```
 
@@ -102,30 +112,41 @@ flutter doctor
 
 ---
 
-### 1️⃣ Iniciar o Banco de Dados com Docker
+### 1️⃣ Configurar o PostgreSQL (Local ou Docker)
+
+**Opção A: PostgreSQL Local**
+
+```bash
+# Criar o banco de dados
+sudo -u postgres psql -c "CREATE DATABASE usuarios_db;"
+
+# Popular com dados iniciais
+sudo -u postgres psql -d usuarios_db -f backend/setup.sql
+```
+
+**Opção B: PostgreSQL com Docker (opcional)**
 
 ```bash
 cd backend
 docker compose up -d
+# Depois execute o setup.sql manualmente
 ```
-
-✅ PostgreSQL rodando em container (porta 5433)  
-📚 Dados persistidos em volume Docker
 
 ### 2️⃣ Configurar Variáveis de Ambiente
 
-O arquivo `backend/.env` já está configurado para Docker:
+O arquivo `backend/.env` já está configurado:
 
 ```env
 DB_USER=postgres
-DB_PASSWORD=sua_senha_aqui
+DB_PASSWORD=postgres
 DB_HOST=localhost
-DB_PORT=5433
+DB_PORT=5432
 DB_NAME=usuarios_db
 PORT=3000
+NODE_ENV=development
 ```
 
-> **Nota:** A porta 5433 é mapeada do container (5432 interno) para sua máquina
+> **Nota:** Use `sudo -u postgres psql -c "CREATE DATABASE usuarios_db;"` para criar o banco antes
 
 ### 3️⃣ Iniciar o Backend
 
@@ -140,46 +161,58 @@ npm run dev          # Iniciar com auto-reload
 ✅ Backend rodando em: `http://localhost:3000`  
 📚 Swagger/Docs em: `http://localhost:3000/api-docs`
 
-### 4️⃣ Iniciar o Frontend Flutter
+### 4️⃣ Executar o Frontend Flutter
 
 Abra um **novo terminal**:
 
 ```bash
 cd frontend
-flutter pub get      # Instalar dependências (primeira vez)
-flutter run -d chrome
+flutter pub get                  # Instalar dependências (primeira vez)
+flutter create --platforms=linux .  # Adicionar suporte Linux (primeira vez)
+flutter run -d linux            # Executar no Linux Desktop
 ```
 
-✅ Frontend abrirá automaticamente no Chrome
+✅ Frontend abrirá automaticamente na janela do Linux
+
+> **Dica:** Use `flutter run -d linux --release` para build otimizado
 
 ---
 
 ## 📡 Endpoints da API
 
-| Método | Rota      | Descrição             |
-| ------ | --------- | --------------------- |
-| GET    | /usuarios | Listar todos usuários |
-| POST   | /usuarios | Criar novo usuário    |
-| POST   | /login    | Autenticar usuário    |
+| Método | Rota           | Descrição                |
+| ------ | -------------- | ------------------------ |
+| POST   | /login         | Autenticar usuário       |
+| GET    | /usuarios      | Listar todos os usuários |
+| POST   | /usuarios      | Criar novo usuário       |
+| PATCH  | /usuarios/{id} | Atualizar usuário        |
+| DELETE | /usuarios/{id} | Deletar usuário          |
 
-### Exemplo de Cadastro (POST /usuarios)
-
-```json
-{
-  "nome": "João Silva",
-  "email": "joao@email.com",
-  "senha": "123456"
-}
-```
+**Documentação completa:** Acesse `http://localhost:3000/api-docs` (Swagger)
 
 ---
 
-## 🎯 Funcionalidades do App Flutter
+## 🎯 Funcionalidades
 
-1. **Tela Principal** - Menu com navegação
-2. **Cadastrar Usuário** - Formulário com validação + envio POST
-3. **Listar Usuários** - Busca GET + exibição em lista
-4. **Tratamento de Erros** - Mensagens amigáveis se servidor offline
+### Backend
+
+- ✅ Autenticação com login
+- ✅ CRUD completo de usuários (Create, Read, Update, Delete)
+- ✅ Validação de dados
+- ✅ Tratamento de erros
+- ✅ Documentação Swagger automática
+
+### Frontend
+
+- ✅ **Tela Inicial** - Escolher entre Login ou Registro
+- ✅ **Autenticação** - Email e senha com validação
+- ✅ **Registro** - Criar nova conta com confirmação de senha
+- ✅ **Menu Principal** - Navegação após login
+- ✅ **Cadastro de Usuários** - Adicionar novos usuários
+- ✅ **Listagem de Usuários** - Visualizar todos os usuários
+- ✅ **Editar Usuários** - Alterar nome e email
+- ✅ **Deletar Usuários** - Remover usuários com confirmação
+- ✅ **Logout** - Voltar para tela inicial
 
 ---
 
